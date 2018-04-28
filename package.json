@@ -1,11 +1,15 @@
 {
   "name": "restfulblogapp",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is my version of RESTful Routes Blog App tutorial web app from Colt Steele's Udemy Web Development Bootcamp.",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexander-fraser/restful-blog.git"
+  },  
   "author": "Alexander Fraser",
   "license": "ISC",
   "dependencies": {
