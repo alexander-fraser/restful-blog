@@ -2,6 +2,7 @@
 var express         = require("express"),
     methodOverride  = require("method-override"),
     bodyParser      = require("body-parser"),
+    expressSanitizer= require("express-sanitizer"),
     mongoose        = require("mongoose"),
     app             = express();
 
@@ -12,6 +13,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 
 // Mongoose database config.
 var blogSchema = new mongoose.Schema({
@@ -23,6 +25,7 @@ var blogSchema = new mongoose.Schema({
 
 var Blog = mongoose.model("Blog", blogSchema);
 
+// Initialize database.
 /* Blog.create({
     title: "Test Blog",
     image: "https://images.unsplash.com/photo-1487341290491-1081724e5844?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=aa97c08ab6ce7d79279c8da5c382aa3d&auto=format&fit=crop&w=750&q=80",
@@ -52,6 +55,8 @@ app.get("/blogs/new", function(req, res){
 
 // Create route.
 app.post("/blogs", function(req, res){
+    req.body.blog.body = req.sanitize(req.body.blog.body);          // Removes script tags from the html input.
+
     Blog.create(req.body.blog, function(err, newBlog){
         if(err){
             res.render("new.ejs");
@@ -85,6 +90,8 @@ app.get("/blogs/:id/edit", function(req, res){
 
 // Update route.
 app.put("/blogs/:id", function(req, res){
+    req.body.blog.body = req.sanitize(req.body.blog.body);           // Removes script tags from the html input.
+
     Blog.findByIdAndUpdate(req.params.id, req.body.blog, function(err, updatedBlog){
         if(err){
             res.redirect("/blogs");
